@@ -22,6 +22,8 @@ pythonpath = ["."]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+# tools/ holds standalone python3 helper scripts (Person B), not app code.
+extend-exclude = ["tools"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
