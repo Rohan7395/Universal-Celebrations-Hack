@@ -51,10 +51,20 @@ def seed(conn: sqlite3.Connection, today: date | None = None) -> None:
     conn.executemany(
         "INSERT INTO caregivers (id, tenant_id, name, phone, skills) VALUES (?, ?, ?, ?, ?)",
         [
-            ("cg-priya", TENANT_ID, "Priya Nair", "+1-555-0111",
-             json.dumps(["personal care", "medication support"])),
-            ("cg-marcus", TENANT_ID, "Marcus Bell", "+1-555-0122",
-             json.dumps(["companionship", "mobility support"])),
+            (
+                "cg-priya",
+                TENANT_ID,
+                "Priya Nair",
+                "+1-555-0111",
+                json.dumps(["personal care", "medication support"]),
+            ),
+            (
+                "cg-marcus",
+                TENANT_ID,
+                "Marcus Bell",
+                "+1-555-0122",
+                json.dumps(["companionship", "mobility support"]),
+            ),
         ],
     )
     conn.executemany(
@@ -90,10 +100,13 @@ def main() -> None:
     parser.add_argument("--db", type=Path, default=settings.db_path)
     path = parser.parse_args().db
     conn = create_fresh(path)
-    counts = {
-        t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]  # nosec B608 (fixed table names)
-        for t in ("tenants", "clients", "caregivers", "visits")
-    }
+    row = conn.execute(
+        """SELECT (SELECT COUNT(*) FROM tenants) AS tenants,
+                  (SELECT COUNT(*) FROM clients) AS clients,
+                  (SELECT COUNT(*) FROM caregivers) AS caregivers,
+                  (SELECT COUNT(*) FROM visits WHERE status = 'open') AS open_slots"""
+    ).fetchone()
+    counts = dict(row)
     conn.close()
     print(f"Seeded {path}: {counts}")
 
