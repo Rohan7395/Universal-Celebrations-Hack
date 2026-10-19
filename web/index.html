@@ -39,7 +39,14 @@
           <button type="button" class="btn danger" id="call-end" hidden>End call</button>
         </div>
         <ol class="transcript" id="transcript" aria-live="polite"></ol>
-        <p class="call-hint" id="call-hint">Uses your microphone. Speak as Walter.</p>
+        <form class="typed" id="typed" hidden>
+          <input id="typed-input" type="text" autocomplete="off" placeholder="Type as Walter, e.g. I got dizzy and fell" aria-label="Walter's words">
+          <button type="submit" class="btn primary" id="typed-send">Send</button>
+        </form>
+        <p class="call-hint">
+          <span id="call-hint">Uses your microphone. Speak as Walter.</span>
+          <button type="button" class="link" id="typed-toggle">Type instead</button>
+        </p>
       </div>
     </section>
 

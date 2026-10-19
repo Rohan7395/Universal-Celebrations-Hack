@@ -123,7 +123,53 @@ async function endCall() {
   }
 }
 
+// ---------------------------------------------------------------- typed fallback
+// If voice or ElevenLabs fails on stage: Walter's words go straight to /api/flag and
+// Grace's reply is the `say` line the backend returns. No ElevenLabs involved.
+
+let typedMode = false;
+
+function setTypedMode(on) {
+  typedMode = on;
+  $("#typed").hidden = !on;
+  $("#call-start").hidden = on || !!conversation;
+  $("#call-hint").textContent = on
+    ? "Typed mode: no voice. Grace's replies come from the care team (/api/flag)."
+    : "Uses your microphone. Speak as Walter.";
+  $("#typed-toggle").textContent = on ? "Use voice" : "Type instead";
+  if (on) {
+    $("#transcript").replaceChildren();
+    setStatus("listening", "Typed check-in");
+    addLine("grace", `Good morning, ${CLIENT.firstName}. This is Grace from BrightDays. How are you feeling today?`);
+    $("#typed-input").focus();
+  } else {
+    setStatus("idle", "Ready");
+  }
+}
+
+async function sendTyped(event) {
+  event.preventDefault();
+  const input = $("#typed-input");
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  $("#typed-send").disabled = true;
+  addLine("client", text);
+  try {
+    addLine("grace", "Thank you for telling me.");
+    addLine("grace", await flag({ client_id: CLIENT.id, what_was_said: text }));
+  } finally {
+    $("#typed-send").disabled = false;
+    input.focus();
+  }
+}
+
 export function initCall() {
   $("#call-start").addEventListener("click", startCall);
   $("#call-end").addEventListener("click", endCall);
+  $("#typed").addEventListener("submit", sendTyped);
+  $("#typed-toggle").addEventListener("click", async () => {
+    if (conversation) await endCall();
+    setTypedMode(!typedMode);
+  });
 }

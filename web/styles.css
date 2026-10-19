@@ -164,3 +164,7 @@ h2 { font-size: 14px; font-weight: 600; }
 .line-tool, .line-error { font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); }
 .line-error { color: var(--emergency); }
 .call-hint { margin: 0; font-size: 12px; color: var(--muted); }
+.typed { display: flex; gap: 8px; }
+.typed input { flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); }
+.typed input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.link { background: none; border: 0; padding: 0; margin-left: 6px; font: inherit; color: var(--accent); cursor: pointer; text-decoration: underline; }
