@@ -1,9 +1,11 @@
-"""Create (or update) Grace, the ElevenLabs Conversational AI agent, from content/elevenlabs/grace.json.
+"""Create (or update) Grace, the ElevenLabs Conversational AI agent.
+
+The agent is defined in content/elevenlabs/grace.json.
 
 Reads ELEVENLABS_API_KEY from the environment or .env. Writes ELEVENLABS_AGENT_ID back into .env.
 
   python3 tools/eleven_grace.py voices     list candidate voices for Grace
-  python3 tools/eleven_grace.py create     create the flag tool + agent (or update the existing agent)
+  python3 tools/eleven_grace.py create     create the flag tool + agent (or update the agent)
   python3 tools/eleven_grace.py create --voice <voice_id>
 """
 
@@ -46,7 +48,10 @@ def set_env(name, value):
 def session():
     key = env("ELEVENLABS_API_KEY")
     if not key:
-        sys.exit("ELEVENLABS_API_KEY is missing. Save it with: python3 tools/set_env_key.py ELEVENLABS_API_KEY")
+        sys.exit(
+            "ELEVENLABS_API_KEY is missing. Save it with: "
+            "python3 tools/set_env_key.py ELEVENLABS_API_KEY"
+        )
     s = requests.Session()
     s.headers.update({"xi-api-key": key, "Content-Type": "application/json"})
     return s
@@ -62,10 +67,14 @@ def call(s, method, path, **kwargs):
 def candidate_voices(s, spec):
     vs = spec["voice_search"]
     for age in (vs["age"], vs["fallback_age"]):
-        data = call(s, "GET", "/v2/voices", params={"gender": vs["gender"], "age": age, "page_size": 20})
+        data = call(
+            s, "GET", "/v2/voices", params={"gender": vs["gender"], "age": age, "page_size": 20}
+        )
         if data.get("voices"):
             return data["voices"]
-    return call(s, "GET", "/v2/voices", params={"gender": vs["gender"], "page_size": 20}).get("voices", [])
+    return call(s, "GET", "/v2/voices", params={"gender": vs["gender"], "page_size": 20}).get(
+        "voices", []
+    )
 
 
 def cmd_voices(_args):
@@ -95,7 +104,9 @@ def cmd_create(args):
         "agent": {
             "first_message": spec["first_message"],
             "language": "en",
-            "dynamic_variables": {"dynamic_variable_placeholders": spec["dynamic_variable_placeholders"]},
+            "dynamic_variables": {
+                "dynamic_variable_placeholders": spec["dynamic_variable_placeholders"]
+            },
             "prompt": {"prompt": spec["prompt"], "tool_ids": [tool_id]},
         },
         "tts": {"voice_id": voice_id},
@@ -117,7 +128,9 @@ def cmd_create(args):
 
 
 def main():
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("voices")
     c = sub.add_parser("create")

@@ -59,7 +59,10 @@ def env_key():
 def session():
     key = env_key()
     if not key:
-        sys.exit("MASKY_API_KEY is not set. Create a key at https://masky.ai/developer, then: export MASKY_API_KEY=mky_...")
+        sys.exit(
+            "MASKY_API_KEY is not set. Create a key at https://masky.ai/developer, "
+            "then save it with: python3 tools/set_env_key.py MASKY_API_KEY"
+        )
     s = requests.Session()
     s.headers.update({"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
     return s
@@ -70,7 +73,10 @@ def call(s, method, path, **kwargs):
     if r.status_code == 401:
         sys.exit("Masky rejected the key (401). Create a new one at https://masky.ai/developer.")
     if r.status_code == 402:
-        sys.exit("Masky says the account is out of credits (402). Add credits, then re-run; finished work is kept.")
+        sys.exit(
+            "Masky says the account is out of credits (402). "
+            "Add credits, then re-run; finished work is kept."
+        )
     if r.status_code >= 400:
         sys.exit(f"Masky {method} {path} failed: {r.status_code} {r.text[:500]}")
     return r.json() if r.content else {}
@@ -118,10 +124,28 @@ def download(url, dest):
 
 def ext_of(url, default):
     suffix = pathlib.PurePosixPath(urllib.parse.urlparse(url).path).suffix
-    return suffix if suffix in {".mp4", ".webm", ".mov", ".mp3", ".wav", ".ogg", ".m4a", ".png", ".jpg", ".jpeg", ".webp"} else default
+    return (
+        suffix
+        if suffix
+        in {
+            ".mp4",
+            ".webm",
+            ".mov",
+            ".mp3",
+            ".wav",
+            ".ogg",
+            ".m4a",
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".webp",
+        }
+        else default
+    )
 
 
 # ---------------------------------------------------------------- commands
+
 
 def cmd_check(_args):
     s = session()
@@ -144,9 +168,11 @@ def cmd_voices(_args):
     for agent in spec["agents"]:
         if agent["key"] in chosen:
             continue
-        def score(v):
+
+        def score(v, keywords=agent["voice_keywords"]):
             name = (v.get("name") or "").lower()
-            return sum(k in name for k in agent["voice_keywords"]) - (5 if v.get("id") in used else 0)
+            return sum(k in name for k in keywords) - (5 if v.get("id") in used else 0)
+
         best = max(voices, key=score)
         chosen[agent["key"]] = {"id": best.get("id"), "name": best.get("name")}
         used.add(best.get("id"))
@@ -180,22 +206,32 @@ def cmd_avatars(_args):
             state["avatars"][key] = entry
             save(STATE, state)
             print(f"{key}: face generated -> {local.relative_to(ROOT)}")
-        created = call(s, "POST", "/avatars", json={
-            "displayName": agent["displayName"],
-            "imageUrl": entry["imageUrl"],
-            "personalityPrompt": agent["personality"],
-            "voiceId": voices[key]["id"],
-        })
-        entry.update({
-            "displayName": agent["displayName"],
-            "avatarId": find(created, "avatarId"),
-            "avatarOwnerUserId": find(created, "avatarOwnerUserId"),
-            "voiceId": voices[key]["id"],
-        })
+        created = call(
+            s,
+            "POST",
+            "/avatars",
+            json={
+                "displayName": agent["displayName"],
+                "imageUrl": entry["imageUrl"],
+                "personalityPrompt": agent["personality"],
+                "voiceId": voices[key]["id"],
+            },
+        )
+        entry.update(
+            {
+                "displayName": agent["displayName"],
+                "avatarId": find(created, "avatarId"),
+                "avatarOwnerUserId": find(created, "avatarOwnerUserId"),
+                "voiceId": voices[key]["id"],
+            }
+        )
         state["avatars"][key] = entry
         save(STATE, state)
         print(f"{key}: avatar created ({entry['avatarId']})")
-    print("Done. Check the faces in web/avatars/. To redo one, delete its entry from web/media/masky.json.")
+    print(
+        "Done. Check the faces in web/avatars/. "
+        "To redo one, delete its entry from web/media/masky.json."
+    )
 
 
 def render_video(s, state, video):
@@ -204,12 +240,21 @@ def render_video(s, state, video):
     out = video.get("output", "video")
     url_key = "videoUrl" if out == "video" else "audioUrl"
     default_ext = ".mp4" if out == "video" else ".mp3"
-    conv = call(s, "POST", "/conversations", json={"avatarOwnerUserId": av["avatarOwnerUserId"], "avatarId": av["avatarId"]})
+    conv = call(
+        s,
+        "POST",
+        "/conversations",
+        json={"avatarOwnerUserId": av["avatarOwnerUserId"], "avatarId": av["avatarId"]},
+    )
     slug = find(conv, "shareSlug")
     parts = []
     for i, text in enumerate(video["parts"], 1):
-        turn = call(s, "POST", f"/conversations/{find(conv, 'conversationId')}/turn",
-                    json={"userText": text, "output": out, "mode": "speak"})
+        turn = call(
+            s,
+            "POST",
+            f"/conversations/{find(conv, 'conversationId')}/turn",
+            json={"userText": text, "output": out, "mode": "speak"},
+        )
         turn_id = find(turn, "id")
         deadline = time.time() + 240
         url = None
@@ -261,7 +306,9 @@ def cmd_videos(args):
 
 
 def main():
-    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
     sub.add_parser("check")
     sub.add_parser("voices")
@@ -271,7 +318,9 @@ def main():
     v.add_argument("--optional", action="store_true", help="also render optional items")
     v.add_argument("--force", action="store_true", help="re-render even if already done")
     args = p.parse_args()
-    {"check": cmd_check, "voices": cmd_voices, "avatars": cmd_avatars, "videos": cmd_videos}[args.cmd](args)
+    {"check": cmd_check, "voices": cmd_voices, "avatars": cmd_avatars, "videos": cmd_videos}[
+        args.cmd
+    ](args)
 
 
 if __name__ == "__main__":
