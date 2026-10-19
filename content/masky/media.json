@@ -1,0 +1,133 @@
+{
+  "_note": "Input for tools/masky.py. Text matches content/masky/scripts.md, split into parts of at most 3 sentences (a Masky speak-turn limit). The dashboard plays the parts of one video in order.",
+  "style": "Photorealistic head-and-shoulders portrait, looking straight at the camera, mouth closed, gentle natural expression, soft window light, softly blurred warm background, 85mm photo, high detail",
+  "agents": [
+    {
+      "key": "maya",
+      "displayName": "Maya · Architect",
+      "look": "a woman in her 40s with a warm smile, shoulder-length dark hair, wearing a soft cardigan, bright home office behind her",
+      "voice_keywords": ["warm", "female", "alto", "calm"],
+      "personality": "You are Maya, the Architect of an AI customer-service platform. You are curious and patient. You set up customer-service teams for businesses. Speak in short, clear sentences. Use active voice. Give one instruction per sentence."
+    },
+    {
+      "key": "grace",
+      "displayName": "Grace · Companion",
+      "look": "a woman in her 60s with kind eyes and silver hair, wearing a soft sweater, cozy living room behind her",
+      "voice_keywords": ["soft", "warm", "female", "gentle", "older"],
+      "personality": "You are Grace, the Companion for BrightDays Home Care. You call older adults every day to check on them. You are gentle and warm. Speak slowly, in short sentences. Never give medical advice."
+    },
+    {
+      "key": "leo",
+      "displayName": "Leo · Coordinator",
+      "look": "a man in his 30s with a friendly open face, wearing a light headset, bright front desk behind him",
+      "voice_keywords": ["bright", "friendly", "male", "young"],
+      "personality": "You are Leo, the Coordinator for BrightDays Home Care. You answer families' questions and route them to the right teammate. You are friendly and clear."
+    },
+    {
+      "key": "ben",
+      "displayName": "Ben · Guardian",
+      "look": "a man in his 50s with a calm, steady expression, wearing a plain button-up shirt, quiet office behind him",
+      "voice_keywords": ["deep", "calm", "male", "slow", "kind"],
+      "personality": "You are Ben, the Guardian. You judge every conversation for safety and decide when a human must step in. You are calm and steady."
+    },
+    {
+      "key": "dana",
+      "displayName": "Dana · Scheduler",
+      "look": "a woman in her 40s with a focused, confident expression, wearing a blazer, a calendar on the wall behind her",
+      "voice_keywords": ["confident", "female", "firm", "clear"],
+      "personality": "You are Dana, the Scheduler for BrightDays Home Care. You book Caregiver visits. You are decisive and precise."
+    },
+    {
+      "key": "sam",
+      "displayName": "Sam · Researcher",
+      "look": "a person in their 30s with round glasses and an attentive expression, bookshelves behind them",
+      "voice_keywords": ["energetic", "quick", "young", "conversational"],
+      "personality": "You are Sam, the Researcher. You find answers to questions the team cannot answer yet, and you cite your sources. You are persistent and curious."
+    }
+  ],
+  "videos": [
+    {
+      "file": "maya-intro",
+      "agent": "maya",
+      "output": "video",
+      "parts": [
+        "Hello. I am Maya. I build customer service teams.",
+        "I read your handbook and your on-call sheet. Your documents answer most of my questions. I have two more questions for you."
+      ]
+    },
+    {
+      "file": "maya-q2",
+      "agent": "maya",
+      "output": "video",
+      "parts": [
+        "Question one. Sometimes a Client feels lonely, sleeps badly, or does not eat well. We call this a Watch sign.",
+        "After how many days in a row should we treat a Watch sign as urgent? The usual answer is three days."
+      ]
+    },
+    {
+      "file": "maya-q3",
+      "agent": "maya",
+      "output": "video",
+      "parts": [
+        "Question two. Is there anything about a specific Client that we must always escalate? For example, a health condition or a known risk."
+      ]
+    },
+    {
+      "file": "maya-done",
+      "agent": "maya",
+      "output": "video",
+      "parts": [
+        "Thank you. I have your answers. I chose five skills for your team.",
+        "Your handbook offers medication reminder calls. We do not have that skill yet, so we are writing it now.",
+        "Your team is ready. Meet Grace, Leo, Ben, Dana and Sam."
+      ]
+    },
+    {
+      "file": "grace-family-update-linda",
+      "agent": "grace",
+      "output": "video",
+      "parts": [
+        "Hello Linda. This is Grace from BrightDays. I spoke with your father, Walter, at ten this morning.",
+        "He felt dizzy, and he fell in the kitchen. He says he is not hurt. Rosa, his caregiver, will visit him at three o'clock today.",
+        "Priya, our on-call coordinator, will call you soon. Your father was calm, and he asked me about the Giants game. We will send you another update after Rosa's visit."
+      ]
+    },
+    {
+      "file": "maya-closing",
+      "agent": "maya",
+      "output": "video",
+      "optional": true,
+      "parts": [
+        "We set up BrightDays on this stage in one minute. Any business can do the same. Upload your documents, answer two questions, and meet your team."
+      ]
+    },
+    {
+      "file": "ben-urgent",
+      "agent": "ben",
+      "output": "audio",
+      "optional": true,
+      "parts": ["Walter Brooks has an urgent flag. He fell, and he feels dizzy. I am paging Priya now."]
+    },
+    {
+      "file": "dana-booked",
+      "agent": "dana",
+      "output": "audio",
+      "optional": true,
+      "parts": ["I booked Rosa for Walter at three o'clock today. Rosa is his usual caregiver."]
+    },
+    {
+      "file": "sam-proposal",
+      "agent": "sam",
+      "output": "audio",
+      "optional": true,
+      "parts": ["I found an answer about Medi-Cal and in-home care. I wrote a proposal with three sources. A human must approve it."]
+    },
+    {
+      "file": "leo-followup",
+      "agent": "leo",
+      "output": "audio",
+      "optional": true,
+      "parts": ["I do not have a policy for this question. I told Linda we will follow up. I logged it for Sam."]
+    }
+  ]
+}

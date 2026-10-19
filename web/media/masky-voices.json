@@ -1,0 +1,26 @@
+{
+  "maya": {
+    "id": "voice_d8577145a66923944126f0ee61abef41c591dfc27c9a937855168c883ccdd822",
+    "name": "Warm American Female"
+  },
+  "grace": {
+    "id": "voice_829afd67fc6fe3adeb0e959b3216f597a84206e292b24635047cb89e6c3d4f42",
+    "name": "Caring Mother"
+  },
+  "leo": {
+    "id": "voice_91a6eac3714f50452fdd08c0f471a128787cf51101dccd34a5cb34e8a5fbadc0",
+    "name": "Casual Podcast Host"
+  },
+  "ben": {
+    "id": "voice_45d54bcdfa0e93206cfd9e3270ed9faccd5d2d0704648b419a9cadd753ad8100",
+    "name": "Comforting Male Conversationalist"
+  },
+  "dana": {
+    "id": "voice_ea3470969375745c20cf0a21c909fcd22015ae690efe399a00c9a2838b487370",
+    "name": "Seasoned Midwestern Actress"
+  },
+  "sam": {
+    "id": "voice_32f6aa9217c2b70368ea8deba9012829c087b1448e13c3af5fc1b8a3bae45a21",
+    "name": "Conversational English Guy"
+  }
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrightDays Fleet</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◐</span>
+      <div>
+        <h1>BrightDays Fleet</h1>
+        <p class="sub">AI care team for <strong>BrightDays Home Care</strong> · synthetic demo data</p>
+      </div>
+    </div>
+    <div id="conn" class="conn" data-state="connecting" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span><span class="conn-text">Connecting…</span>
+    </div>
+  </header>
+
+  <section id="agents" class="agents" aria-label="Agents"></section>
+
+  <main class="grid">
+    <section class="panel" id="panel-call" aria-labelledby="h-call">
+      <header class="panel-head"><h2 id="h-call">Check-in call</h2><span class="tag">Grace · ElevenLabs</span></header>
+      <div class="panel-body empty">Start a live Check-in with a Client. Transcript appears here. <em>(M1)</em></div>
+    </section>
+
+    <section class="panel feed-panel" id="panel-feed" aria-labelledby="h-feed">
+      <header class="panel-head"><h2 id="h-feed">Room</h2><span class="tag" id="feed-count">0 messages</span></header>
+      <ol id="feed" class="feed" aria-live="polite"></ol>
+      <div id="feed-empty" class="panel-body empty">Agent handoffs and decisions stream here.</div>
+    </section>
+
+    <section class="panel" id="panel-family" aria-labelledby="h-family">
+      <header class="panel-head"><h2 id="h-family">Family phone</h2><span class="tag">Linda Brooks</span></header>
+      <div class="panel-body empty">The daughter's texts with Leo, and Family Update voice notes. <em>(M3)</em></div>
+    </section>
+
+    <section class="panel" id="panel-onboarding" aria-labelledby="h-onboarding">
+      <header class="panel-head"><h2 id="h-onboarding">Onboarding</h2><span class="tag">Maya · Architect</span></header>
+      <div class="panel-body empty">Upload documents, answer Maya's questions, approve risky skills. <em>(M2)</em></div>
+    </section>
+
+    <section class="panel" id="panel-queue" aria-labelledby="h-queue">
+      <header class="panel-head"><h2 id="h-queue">Human queue</h2><span class="tag">On-call: Priya</span></header>
+      <div class="panel-body empty">Escalated cases waiting for a human. <em>(M1)</em></div>
+    </section>
+
+    <section class="panel" id="panel-proposals" aria-labelledby="h-proposals">
+      <header class="panel-head"><h2 id="h-proposals">Proposals</h2></header>
+      <div class="panel-body empty">Research proposals with sources, to approve or reject. <em>(M3)</em></div>
+    </section>
+
+    <section class="panel" id="panel-controls" aria-labelledby="h-controls">
+      <header class="panel-head"><h2 id="h-controls">Kill switch</h2></header>
+      <div class="panel-body empty">Pause outbound Check-ins. Loosening needs a reason. <em>(M3)</em></div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{
+  "_note": "Synthetic seed data for the hackathon demo. All people, phone numbers and addresses are fictional (555 numbers).",
+  "tenant": {
+    "id": "brightdays",
+    "name": "BrightDays Home Care",
+    "timezone": "America/Los_Angeles",
+    "office_phone": "+16505550100"
+  },
+  "on_call": [
+    { "name": "Priya Nair", "days": ["mon", "tue", "wed"], "phone": "+16505550111", "reach_by": "sms_then_call" },
+    { "name": "Marcus Webb", "days": ["thu", "fri", "sat", "sun"], "phone": "+16505550112", "reach_by": "sms_then_call" }
+  ],
+  "caregivers": [
+    { "id": "cg-rosa", "name": "Rosa Delgado", "phone": "+16505550121", "area": "San Mateo" },
+    { "id": "cg-tom", "name": "Tom Nguyen", "phone": "+16505550122", "area": "Burlingame" },
+    { "id": "cg-amara", "name": "Amara Osei", "phone": "+16505550123", "area": "Redwood City" }
+  ],
+  "clients": [
+    {
+      "id": "walter",
+      "name": "Walter Brooks",
+      "age": 82,
+      "city": "San Mateo",
+      "phone": "+16505550201",
+      "checkin_time": "10:00",
+      "services": ["personal_care", "daily_checkin"],
+      "primary_caregiver": "cg-rosa",
+      "care_notes": "Lives alone. Widower. Takes blood pressure medication. Uses a cane outdoors. Loves baseball (Giants) and his garden.",
+      "family_contacts": [
+        { "name": "Linda Brooks", "relation": "daughter", "phone": "+16505550301", "prefers": "sms" }
+      ]
+    },
+    {
+      "id": "henry",
+      "name": "Henry Chen",
+      "age": 79,
+      "city": "Burlingame",
+      "phone": "+16505550202",
+      "checkin_time": "09:30",
+      "services": ["personal_care", "daily_checkin", "medication_reminders"],
+      "primary_caregiver": "cg-tom",
+      "care_notes": "Type 2 diabetes. Lives with his wife, who has limited mobility.",
+      "family_contacts": [
+        { "name": "Grace Chen", "relation": "wife", "phone": "+16505550202", "prefers": "call" },
+        { "name": "David Chen", "relation": "son", "phone": "+16505550302", "prefers": "sms" }
+      ]
+    },
+    {
+      "id": "margaret",
+      "name": "Margaret Ellis",
+      "age": 87,
+      "city": "San Mateo",
+      "phone": "+16505550203",
+      "checkin_time": "11:00",
+      "services": ["companionship", "daily_checkin"],
+      "primary_caregiver": "cg-rosa",
+      "care_notes": "Lives alone since her sister moved away in August. Enjoys crosswords and talking about her years as a schoolteacher.",
+      "family_contacts": [
+        { "name": "Paul Ellis", "relation": "nephew", "phone": "+16505550303", "prefers": "sms" }
+      ]
+    },
+    {
+      "id": "dolores",
+      "name": "Dolores Ruiz",
+      "age": 84,
+      "city": "Redwood City",
+      "phone": "+16505550204",
+      "checkin_time": "10:30",
+      "services": ["personal_care", "daily_checkin", "medication_reminders"],
+      "primary_caregiver": "cg-amara",
+      "care_notes": "Early memory loss. Prefers Spanish or simple English. Takes a morning and an evening medication.",
+      "family_contacts": [
+        { "name": "Elena Ruiz", "relation": "daughter", "phone": "+16505550304", "prefers": "call" }
+      ]
+    },
+    {
+      "id": "frank",
+      "name": "Frank Okafor",
+      "age": 76,
+      "city": "Burlingame",
+      "phone": "+16505550205",
+      "checkin_time": "14:00",
+      "services": ["companionship", "daily_checkin"],
+      "primary_caregiver": "cg-tom",
+      "care_notes": "Recovering from a hip replacement in September. Independent and proud. Does not like to worry his children.",
+      "family_contacts": [
+        { "name": "Ada Okafor", "relation": "daughter", "phone": "+16505550305", "prefers": "sms" },
+        { "name": "Chidi Okafor", "relation": "son", "phone": "+16505550306", "prefers": "sms" }
+      ]
+    },
+    {
+      "id": "ruth",
+      "name": "Ruth Goldberg",
+      "age": 90,
+      "city": "San Mateo",
+      "phone": "+16505550206",
+      "checkin_time": "10:00",
+      "services": ["personal_care", "daily_checkin"],
+      "primary_caregiver": "cg-rosa",
+      "care_notes": "Hard of hearing; speak slowly and clearly. Very sociable.",
+      "family_contacts": [
+        { "name": "Miriam Goldberg", "relation": "daughter", "phone": "+16505550307", "prefers": "sms" }
+      ]
+    }
+  ],
+  "visits": [
+    { "id": "v-101", "client_id": "walter", "caregiver_id": "cg-rosa", "date": "2026-10-19", "start": "16:00", "hours": 3, "type": "personal_care" },
+    { "id": "v-102", "client_id": "walter", "caregiver_id": "cg-rosa", "date": "2026-10-21", "start": "10:00", "hours": 3, "type": "personal_care" },
+    { "id": "v-103", "client_id": "henry", "caregiver_id": "cg-tom", "date": "2026-10-19", "start": "09:00", "hours": 3, "type": "personal_care" },
+    { "id": "v-104", "client_id": "margaret", "caregiver_id": "cg-rosa", "date": "2026-10-20", "start": "13:00", "hours": 2, "type": "companionship" },
+    { "id": "v-105", "client_id": "dolores", "caregiver_id": "cg-amara", "date": "2026-10-19", "start": "08:00", "hours": 3, "type": "personal_care" },
+    { "id": "v-106", "client_id": "frank", "caregiver_id": "cg-tom", "date": "2026-10-20", "start": "15:00", "hours": 2, "type": "companionship" },
+    { "id": "v-107", "client_id": "ruth", "caregiver_id": "cg-rosa", "date": "2026-10-19", "start": "12:00", "hours": 3, "type": "personal_care" }
+  ],
+  "caregiver_availability_today": [
+    { "caregiver_id": "cg-rosa", "free": [["15:00", "16:00"]] },
+    { "caregiver_id": "cg-tom", "free": [["13:00", "18:00"]] },
+    { "caregiver_id": "cg-amara", "free": [["11:00", "13:00"], ["15:00", "18:00"]] }
+  ]
+}

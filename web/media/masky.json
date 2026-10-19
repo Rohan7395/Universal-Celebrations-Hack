@@ -1,0 +1,49 @@
+{
+  "avatars": {
+    "maya": {
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FFGG7RtI07sesmNI9XjPzGmotyej1%2Fimages%2Fimg_1792450755823_664268d9.jpeg?alt=media&token=7dc760178cd25417be2f205b9c9e1a26",
+      "image": "avatars/maya.jpeg",
+      "displayName": "Maya \u00b7 Architect",
+      "avatarId": "J3EyGGw8SWQIRLvXdW1i",
+      "avatarOwnerUserId": "FGG7RtI07sesmNI9XjPzGmotyej1",
+      "voiceId": "voice_d8577145a66923944126f0ee61abef41c591dfc27c9a937855168c883ccdd822"
+    },
+    "grace": {
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FFGG7RtI07sesmNI9XjPzGmotyej1%2Fimages%2Fimg_1792450761456_1f42ebdb.jpeg?alt=media&token=dc09807abe26f79f5e52570fa5ee6c06",
+      "image": "avatars/grace.jpeg",
+      "displayName": "Grace \u00b7 Companion",
+      "avatarId": "ySLXzjkMZDxQTL5N1JEp",
+      "avatarOwnerUserId": "FGG7RtI07sesmNI9XjPzGmotyej1",
+      "voiceId": "voice_829afd67fc6fe3adeb0e959b3216f597a84206e292b24635047cb89e6c3d4f42"
+    },
+    "leo": {
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FFGG7RtI07sesmNI9XjPzGmotyej1%2Fimages%2Fimg_1792450766590_e860704c.jpeg?alt=media&token=790201ee0cc10a8c0df7f16e73f5e777",
+      "image": "avatars/leo.jpeg",
+      "displayName": "Leo \u00b7 Coordinator",
+      "avatarId": "GSEVf32gJIAyaqn1EZDS",
+      "avatarOwnerUserId": "FGG7RtI07sesmNI9XjPzGmotyej1",
+      "voiceId": "voice_91a6eac3714f50452fdd08c0f471a128787cf51101dccd34a5cb34e8a5fbadc0"
+    },
+    "ben": {
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FFGG7RtI07sesmNI9XjPzGmotyej1%2Fimages%2Fimg_1792450774584_a3dc0e97.jpeg?alt=media&token=f022013da636c2e904bc78deb7874cf5",
+      "image": "avatars/ben.jpeg",
+      "displayName": "Ben \u00b7 Guardian",
+      "avatarId": "82UitX57E8GfGsiCFTwd",
+      "avatarOwnerUserId": "FGG7RtI07sesmNI9XjPzGmotyej1",
+      "voiceId": "voice_45d54bcdfa0e93206cfd9e3270ed9faccd5d2d0704648b419a9cadd753ad8100"
+    },
+    "dana": {
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FFGG7RtI07sesmNI9XjPzGmotyej1%2Fimages%2Fimg_1792450779582_35815c35.jpeg?alt=media&token=34dff7f2e28a93d6d14770278f1dbab2",
+      "image": "avatars/dana.jpeg",
+      "displayName": "Dana \u00b7 Scheduler",
+      "avatarId": "u9nfTn5n9EJg5h3r7ouz",
+      "avatarOwnerUserId": "FGG7RtI07sesmNI9XjPzGmotyej1",
+      "voiceId": "voice_ea3470969375745c20cf0a21c909fcd22015ae690efe399a00c9a2838b487370"
+    },
+    "sam": {
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/maskydotnet.firebasestorage.app/o/userData%2FFGG7RtI07sesmNI9XjPzGmotyej1%2Fimages%2Fimg_1792450784639_19b2c77a.jpeg?alt=media&token=31fa983b8821e46ed026ead612168e2e",
+      "image": "avatars/sam.jpeg"
+    }
+  },
+  "videos": {}
+}
