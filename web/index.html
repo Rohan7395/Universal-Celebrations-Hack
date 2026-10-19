@@ -26,7 +26,21 @@
   <main class="grid">
     <section class="panel" id="panel-call" aria-labelledby="h-call">
       <header class="panel-head"><h2 id="h-call">Check-in call</h2><span class="tag">Grace · ElevenLabs</span></header>
-      <div class="panel-body empty">Start a live Check-in with a Client. Transcript appears here. <em>(M1)</em></div>
+      <div class="panel-body call">
+        <div class="call-bar">
+          <div class="call-who">
+            <img src="avatars/grace.jpeg" alt="" class="call-face" id="call-face">
+            <div>
+              <div class="call-title">Grace → <span id="call-client-name">Walter Brooks</span></div>
+              <div class="call-status" id="call-status" data-state="idle">Ready</div>
+            </div>
+          </div>
+          <button type="button" class="btn primary" id="call-start">Start Check-in</button>
+          <button type="button" class="btn danger" id="call-end" hidden>End call</button>
+        </div>
+        <ol class="transcript" id="transcript" aria-live="polite"></ol>
+        <p class="call-hint" id="call-hint">Uses your microphone. Speak as Walter.</p>
+      </div>
     </section>
 
     <section class="panel feed-panel" id="panel-feed" aria-labelledby="h-feed">

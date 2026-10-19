@@ -3,10 +3,12 @@
 // Live feed: Server-Sent Events from GET /api/stream. Each event's `data` is one
 // room message (BUILD-PLAN §4):
 //   {tenant, agent, kind: "say"|"handoff"|"decision"|"system", text, payload}
-// Optional extra fields `id` and `ts` are shown when present. The browser
+// Optional `id` and `created_at` (app/api/models.py RoomMessage) are used when present. The browser
 // reconnects on its own and resends Last-Event-ID, so the server can replay.
 //
 // Open with ?mock=1 to play a scripted feed without a backend.
+
+import { initCall } from "./call.js";
 
 const API = ""; // same origin as FastAPI (http://localhost:8000)
 
@@ -70,6 +72,12 @@ function markActive(agent, status) {
 
 // ---------------------------------------------------------------- feed
 
+// SQLite stores UTC as "2026-10-19T16:05:00" with no zone; treat zone-less times as UTC.
+function parseTime(value) {
+  if (!value) return new Date();
+  return new Date(/[zZ]|[+-]\d\d:?\d\d$/.test(value) ? value : `${value}Z`);
+}
+
 function appendMessage(msg) {
   const agent = findAgent(msg.agent);
   const li = document.createElement("li");
@@ -88,14 +96,14 @@ function appendMessage(msg) {
   kind.className = `kind kind-${msg.kind || "say"}`;
   kind.textContent = msg.kind || "say";
   const time = document.createElement("span");
-  time.textContent = new Date(msg.ts || Date.now()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  time.textContent = parseTime(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
   meta.append(who, kind, time);
 
-  const severity = msg.payload?.severity;
+  const severity = String(msg.payload?.severity || "").toLowerCase();
   if (severity) {
     const sev = document.createElement("span");
     sev.className = `sev sev-${severity}`;
-    sev.textContent = severity;
+    sev.textContent = severity[0].toUpperCase() + severity.slice(1);
     meta.append(sev);
   }
 
@@ -157,7 +165,7 @@ export async function api(path, { method = "GET", body } = {}) {
 const MOCK = [
   { agent: "grace", kind: "say", text: "Good morning, Walter. This is Grace from BrightDays. How are you feeling today?" },
   { agent: "grace", kind: "handoff", text: "Flag: Walter says he got dizzy and fell in the kitchen this morning. He thinks he is not hurt." },
-  { agent: "ben", kind: "decision", text: "Severity Urgent by rule: fall + dizziness. Opening a case and paging Priya.", payload: { severity: "Urgent" } },
+  { agent: "ben", kind: "decision", text: "Severity Urgent by rule: fall + dizziness. Opening a case and paging Priya.", payload: { severity: "urgent" } },
   { agent: "dana", kind: "decision", text: "Booked Rosa for Walter at 3:00 PM today. Rosa is his usual caregiver." },
   { agent: "ben", kind: "system", text: "Family Update sent to Linda Brooks (daughter)." },
   { agent: "grace", kind: "say", text: "Walter, Rosa will visit you at three o'clock today. Priya will call you soon." },
@@ -171,5 +179,6 @@ function playMock() {
 // ---------------------------------------------------------------- start
 
 renderAgents();
+initCall();
 if (new URLSearchParams(location.search).has("mock")) playMock();
 else connectStream();

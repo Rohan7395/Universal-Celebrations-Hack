@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.api import flag
+from app.api import eleven, flag
 from app.config import settings
 
 
@@ -15,6 +15,7 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     app.include_router(flag.router, prefix="/api")
+    app.include_router(eleven.router, prefix="/api")
 
     # Mounted last so /api routes win; web/ is Person B's and may not exist yet.
     if settings.web_dir.is_dir():
