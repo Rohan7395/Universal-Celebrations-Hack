@@ -1,0 +1,24 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+
+# Private planning docs (repo is public)
+docs/planning/
+UCH *.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local data
+*.sqlite
+*.sqlite3
+*.db
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
