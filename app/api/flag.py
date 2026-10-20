@@ -1,19 +1,18 @@
-"""POST /api/flag: Grace's only tool. M0 stub returns a fixed Urgent decision."""
+"""POST /api/flag: Grace's only tool. Stub until Guardian is wired in."""
 
 from fastapi import APIRouter
 
-from app.api.models import FlagRequest, FlagResponse, Severity
+from app.api.models import Action, FlagRequest, FlagResponse, Severity
 
 router = APIRouter()
 
 STUB_RESPONSE = FlagResponse(
     severity=Severity.URGENT,
-    actions=["open_case", "page_oncall", "request_visit", "send_family_update"],
+    actions=[Action.PAGE_ON_CALL, Action.BOOK_SAME_DAY_VISIT, Action.INFORM_FAMILY, Action.LOG],
     say="A caregiver will be with you at 3 PM.",
 )
 
 
 @router.post("/flag", response_model=FlagResponse)
 def flag(request: FlagRequest) -> FlagResponse:
-    # TODO(M1): Guardian sets Severity, Scheduler books, 5 s budget with background completion.
     return STUB_RESPONSE

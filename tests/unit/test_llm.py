@@ -76,3 +76,9 @@ def test_agent_model_uses_pinned_ids(monkeypatch) -> None:
     assert isinstance(model, FallbackModel)
     names = [m.model_name for m in model.models]
     assert names == [llm.settings.gemini_model, llm.settings.gemini_fallback_model]
+
+
+def test_fast_agent_model_tries_fast_model_first(monkeypatch) -> None:
+    monkeypatch.setattr(llm, "settings", replace(llm.settings, gemini_api_key="test-key"))
+    names = [m.model_name for m in llm.fast_agent_model().models]
+    assert names == [llm.settings.gemini_fast_model, llm.settings.gemini_model]

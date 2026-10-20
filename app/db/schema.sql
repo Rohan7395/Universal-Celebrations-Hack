@@ -1,28 +1,37 @@
 -- Care Team schema: the 12 tables from docs/BUILD-PLAN.md §4.
--- Timestamps are ISO 8601 text. JSON columns hold JSON text.
+-- Timestamps are ISO 8601 UTC text ending in Z. Visit times are tenant-local, no offset.
+-- JSON columns hold JSON text.
 
 PRAGMA foreign_keys = ON;
+-- Bump with SCHEMA_VERSION in database.py; a stale dev database is then recreated.
+PRAGMA user_version = 2;
 
 CREATE TABLE IF NOT EXISTS tenants (
     id          TEXT PRIMARY KEY,
-    name        TEXT NOT NULL,
-    kind        TEXT NOT NULL,
-    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    name          TEXT NOT NULL,
+    kind          TEXT NOT NULL,
+    timezone      TEXT,
+    office_phone  TEXT,
+    on_call       TEXT NOT NULL DEFAULT '[]',  -- [{name, days: [mon..sun], phone, reach_by}]
+    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 -- A Client is the person being cared for; the family contact lives on the same row.
 CREATE TABLE IF NOT EXISTS clients (
-    id               TEXT PRIMARY KEY,
-    tenant_id        TEXT NOT NULL REFERENCES tenants(id),
-    name             TEXT NOT NULL,
-    phone            TEXT,
-    address          TEXT,
-    notes            TEXT,
-    family_name      TEXT,
-    family_relation  TEXT,
-    family_phone     TEXT,
-    family_email     TEXT,
-    created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    id                    TEXT PRIMARY KEY,
+    tenant_id             TEXT NOT NULL REFERENCES tenants(id),
+    name                  TEXT NOT NULL,
+    age                   INTEGER,
+    phone                 TEXT,
+    city                  TEXT,
+    checkin_time          TEXT,
+    primary_caregiver_id  TEXT REFERENCES caregivers(id),
+    notes                 TEXT,
+    family_name           TEXT,
+    family_relation       TEXT,
+    family_phone          TEXT,
+    family_prefers        TEXT,
+    created_at            TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 CREATE TABLE IF NOT EXISTS caregivers (
@@ -30,9 +39,9 @@ CREATE TABLE IF NOT EXISTS caregivers (
     tenant_id   TEXT NOT NULL REFERENCES tenants(id),
     name        TEXT NOT NULL,
     phone       TEXT,
-    skills      TEXT NOT NULL DEFAULT '[]',
+    area        TEXT,
     active      INTEGER NOT NULL DEFAULT 1,
-    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 -- An open slot has client_id NULL and status 'open'; booking fills client_id.
@@ -46,8 +55,9 @@ CREATE TABLE IF NOT EXISTS visits (
     ends_at       TEXT NOT NULL,
     status        TEXT NOT NULL DEFAULT 'open'
                   CHECK (status IN ('open', 'booked', 'done', 'cancelled')),
+    type          TEXT,
     reason        TEXT,
-    created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 CREATE TABLE IF NOT EXISTS calls (
@@ -59,22 +69,24 @@ CREATE TABLE IF NOT EXISTS calls (
     agent       TEXT NOT NULL,
     status      TEXT NOT NULL DEFAULT 'active'
                 CHECK (status IN ('active', 'ended', 'blocked', 'failed')),
-    started_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now')),
+    started_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     ended_at    TEXT
 );
 
 CREATE TABLE IF NOT EXISTS flags (
     id             INTEGER PRIMARY KEY AUTOINCREMENT,
     tenant_id      TEXT NOT NULL REFERENCES tenants(id),
-    client_id      TEXT NOT NULL REFERENCES clients(id),
+    client_id      TEXT REFERENCES clients(id),  -- NULL if Grace sent an unknown id
+    client_ref     TEXT NOT NULL,                -- the id exactly as sent
     call_id        TEXT REFERENCES calls(id),
     what_was_said  TEXT NOT NULL,
-    rule_severity  TEXT CHECK (rule_severity IN ('routine', 'watch', 'urgent', 'emergency')),
-    llm_severity   TEXT CHECK (llm_severity IN ('routine', 'watch', 'urgent', 'emergency')),
-    severity       TEXT NOT NULL CHECK (severity IN ('routine', 'watch', 'urgent', 'emergency')),
+    rule_severity  TEXT CHECK (rule_severity IN ('Routine', 'Watch', 'Urgent', 'Emergency')),
+    llm_severity   TEXT CHECK (llm_severity IN ('Routine', 'Watch', 'Urgent', 'Emergency')),
+    severity       TEXT NOT NULL CHECK (severity IN ('Routine', 'Watch', 'Urgent', 'Emergency')),
+    reasons        TEXT NOT NULL DEFAULT '[]',
     actions        TEXT NOT NULL DEFAULT '[]',
     say            TEXT,
-    created_at     TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    created_at     TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 -- escalation: from a flag, goes to the human queue. uncovered: a question no policy answers.
@@ -83,13 +95,13 @@ CREATE TABLE IF NOT EXISTS cases (
     tenant_id    TEXT NOT NULL REFERENCES tenants(id),
     client_id    TEXT REFERENCES clients(id),
     kind         TEXT NOT NULL CHECK (kind IN ('escalation', 'uncovered')),
-    severity     TEXT CHECK (severity IN ('routine', 'watch', 'urgent', 'emergency')),
+    severity     TEXT CHECK (severity IN ('Routine', 'Watch', 'Urgent', 'Emergency')),
     status       TEXT NOT NULL DEFAULT 'open'
                  CHECK (status IN ('open', 'accepted', 'resolved')),
     flag_id      INTEGER REFERENCES flags(id),
     summary      TEXT NOT NULL,
     assigned_to  TEXT,
-    created_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now')),
+    created_at   TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     updated_at   TEXT
 );
 
@@ -101,7 +113,7 @@ CREATE TABLE IF NOT EXISTS messages (
     kind        TEXT NOT NULL CHECK (kind IN ('say', 'handoff', 'decision', 'system')),
     text        TEXT NOT NULL,
     payload     TEXT NOT NULL DEFAULT '{}',
-    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 -- Structured audit trail; never holds raw client text.
@@ -112,7 +124,7 @@ CREATE TABLE IF NOT EXISTS events (
     kind        TEXT NOT NULL,
     tool        TEXT,
     payload     TEXT NOT NULL DEFAULT '{}',
-    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 -- Kill switch. Agents may only tighten; loosening needs a human and a reason.
@@ -121,7 +133,7 @@ CREATE TABLE IF NOT EXISTS controls (
     value       TEXT NOT NULL,
     updated_by  TEXT NOT NULL,
     reason      TEXT,
-    updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now'))
+    updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
 
 CREATE TABLE IF NOT EXISTS proposals (
@@ -138,7 +150,7 @@ CREATE TABLE IF NOT EXISTS proposals (
     reason        TEXT,
     commit_sha    TEXT,
     check_result  TEXT,
-    created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%S', 'now')),
+    created_at    TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
     decided_at    TEXT
 );
 

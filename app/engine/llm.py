@@ -87,9 +87,8 @@ async def generate(
     return await with_retry_and_fallback(call)
 
 
-def agent_model() -> FallbackModel:
-    """Model for Pydantic AI agents: the SDK retries 429/5xx, then FallbackModel switches models."""
-    provider = GoogleProvider(
+def _provider() -> GoogleProvider:
+    return GoogleProvider(
         api_key=settings.gemini_api_key,
         retry_options=types.HttpRetryOptions(
             attempts=ATTEMPTS_PER_MODEL,
@@ -98,7 +97,21 @@ def agent_model() -> FallbackModel:
             http_status_codes=sorted(RETRYABLE_CODES),
         ),
     )
+
+
+def agent_model() -> FallbackModel:
+    """Model for Pydantic AI agents: the SDK retries 429/5xx, then FallbackModel switches models."""
+    provider = _provider()
     return FallbackModel(
         GoogleModel(settings.gemini_model, provider=provider),
         GoogleModel(settings.gemini_fallback_model, provider=provider),
+    )
+
+
+def fast_agent_model() -> FallbackModel:
+    """For latency-bound checks: the fast model first, the main model if it fails."""
+    provider = _provider()
+    return FallbackModel(
+        GoogleModel(settings.gemini_fast_model, provider=provider),
+        GoogleModel(settings.gemini_model, provider=provider),
     )
