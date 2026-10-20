@@ -1,18 +1,14 @@
-"""POST /api/flag: Grace's only tool. Stub until Guardian is wired in."""
+"""POST /api/flag: Grace's only tool. Guardian decides; Grace says the `say` line."""
 
 from fastapi import APIRouter
 
-from app.api.models import Action, FlagRequest, FlagResponse, Severity
+from app.agents import guardian
+from app.api.models import FlagRequest, FlagResponse
+from app.config import settings
 
 router = APIRouter()
 
-STUB_RESPONSE = FlagResponse(
-    severity=Severity.URGENT,
-    actions=[Action.PAGE_ON_CALL, Action.BOOK_SAME_DAY_VISIT, Action.INFORM_FAMILY, Action.LOG],
-    say="A caregiver will be with you at 3 PM.",
-)
-
 
 @router.post("/flag", response_model=FlagResponse)
-def flag(request: FlagRequest) -> FlagResponse:
-    return STUB_RESPONSE
+async def flag(request: FlagRequest) -> FlagResponse:
+    return await guardian.handle_flag(request, settings.tenant_id)
